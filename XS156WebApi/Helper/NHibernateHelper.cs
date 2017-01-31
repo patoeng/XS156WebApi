@@ -6,6 +6,7 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Cfg;
+using NHibernate.Dialect;
 using NHibernate.Tool.hbm2ddl;
 using XS156WebApi.Models;
 
@@ -35,36 +36,20 @@ namespace XS156WebApi.Helper
         {
             try
             {
+                
+                
                 NHibernate.Cfg.Configuration  ff= new Configuration();
                 var cfgs = Fluently.Configure()
-                    .Database(MsSqlConfiguration.MsSql2008.ConnectionString(ConnectionString).ShowSql)
+                    .Database( MsSqlConfiguration.MsSql2008.ConnectionString(ConnectionString))
                     .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Equipment>())
                     .ExposeConfiguration(cfg => ff=cfg);
-
-                SchemaValidator f = new SchemaValidator(ff);
 
                _sessionFactory= cfgs.BuildSessionFactory();
               
             }
             catch (Exception ex1)
             {
-                try
-                {
-                    _sessionFactory = Fluently.Configure()
-                        .Database(MsSqlConfiguration.MsSql2008.ConnectionString(ConnectionString).ShowSql)
-                        .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Equipment>())
-                        .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true))
-                        .BuildSessionFactory();
-
-                }
-                catch (Exception ex2)
-                {
-                    _sessionFactory = Fluently.Configure()
-                        .Database(MsSqlConfiguration.MsSql2008.ConnectionString(ConnectionString).ShowSql)
-                        .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Equipment>())
-                        .ExposeConfiguration(cfg => new SchemaExport(cfg).Create(false, true))
-                        .BuildSessionFactory();
-                }
+                throw ex1;
             }
         }
     }

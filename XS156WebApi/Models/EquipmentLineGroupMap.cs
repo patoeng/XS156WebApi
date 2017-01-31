@@ -1,4 +1,6 @@
 ﻿using FluentNHibernate.Mapping;
+using NHibernate.Dialect;
+using NHibernate.Mapping;
 
 namespace XS156WebApi.Models
 {
@@ -9,6 +11,7 @@ namespace XS156WebApi.Models
             Id(x => x.Id).GeneratedBy.GuidComb();
             Map(x => x.LineGroup);
             Table("EquipmentLineGroup");
+            
         }
     }
 }
