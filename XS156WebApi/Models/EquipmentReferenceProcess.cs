@@ -6,21 +6,21 @@ namespace XS156WebApi.Models
     public class EquipmentReferenceProcess
     {
      
-        public virtual Guid Id { get; set; }
-        public virtual Guid Equipment { get; set; }
+        public  Guid Id { get; set; }
+        public  Guid Equipment { get; set; }
 
-        public virtual Guid ReferenceProcess { get; set; }
+        public  Guid ReferenceProcess { get; set; }
 
-        public virtual int ProcessAbleQuantity { get; set; }
+        public  int ProcessAbleQuantity { get; set; }
 
-        public virtual int OutputQuantity { get; set; }
+        public  int OutputQuantity { get; set; }
 
-        public virtual int RejectedQuantity { get; set; }
+        public  int RejectedQuantity { get; set; }
 
-        public virtual DateTime LastUpdated { get; set; }
-        public virtual int TargetQuantity { get; set; }
+        public  DateTime LastUpdated { get; set; }
+        public  int TargetQuantity { get; set; }
 
-        public virtual int QuantityLeftToProcess { get; set; }
-        public virtual bool Completed { get; set; }
+        public  int QuantityLeftToProcess { get; set; }
+        public  bool Completed { get; set; }
     }
 }

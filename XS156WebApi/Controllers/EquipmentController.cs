@@ -88,7 +88,7 @@ namespace XS156WebApi.Controllers
 
             if (serverData == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            EquipmentDataRepository.Delete(id);
+            EquipmentDataRepository.Delete(serverData);
             return new StatusCodeResult(HttpStatusCode.NoContent, this);
         }
     }

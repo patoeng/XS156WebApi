@@ -10,7 +10,7 @@ namespace XS156WebApi.Models.Persistence
         T Get(string id);
         IEnumerable<T> GetAll();
         T Add(T obj);
-        void Delete(string id);
+        void Delete(T entity);
         bool Update(T obj);
     }
 }

@@ -1,10 +1,10 @@
 ﻿namespace XS156WebApi.Models
 {
   
-    public enum EquipmentRole
+    public enum EquipmentRole : int
     {
-        None,
-        Initiator,
-        Finalizer
+        None=0,
+        Initiator=1,
+        Finalizer=2
     }
 }

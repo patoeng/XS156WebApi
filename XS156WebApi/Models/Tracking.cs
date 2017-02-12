@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Web;
 using System.Xml;
-using NHibernate.Linq;
 using XS156WebApi.Helper;
 using XS156WebApi.Models.Persistence;
 
@@ -85,39 +84,38 @@ namespace XS156WebApi.Models
 
         public TrackingData GetLastByLineGroup(EquipmentLineGroup equipmentLineGroup)
         {
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var references = session.Query<ReferenceProcess>()
+            IReferenceProcessRepository session = new ReferenceProcessRepository();
+         
+                var references = session.GetAll()
                     .Where(x => x.LineGroup == equipmentLineGroup.Id)
                     .OrderByDescending(x => x.StartDateTime)
                     .Take(1);
 
                 return GetByGuid(references.First().ProcessGuid);
-            }
+            
         }
         public TrackingData GetLastByLineGroup(Guid equipmentLineGroup)
         {
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var references = session.Query<ReferenceProcess>().ToList()
-                    .Where(x => x.LineGroup == equipmentLineGroup)
-                    .OrderByDescending(x => x.StartDateTime)
-                    .First();
+            IReferenceProcessRepository session = new ReferenceProcessRepository();
+            var references = session.GetAll().ToList()
+                .Where(x => x.LineGroup == equipmentLineGroup)
+                .OrderByDescending(x => x.StartDateTime)
+                .Take(1);
 
-                return GetByGuid(references.ProcessGuid);
-            }
+                return GetByGuid(references.First().ProcessGuid);
+            
         }
         public Guid GetLastByLineGroupS(Guid equipmentLineGroup)
         {
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var references = session.Query<ReferenceProcess>().ToList()
+            IReferenceProcessRepository session = new ReferenceProcessRepository();
+                var references = session.GetAll().ToList()
                     .Where(x => x.LineGroup == equipmentLineGroup)
                     .OrderByDescending(x => x.StartDateTime)
+                    .Take(1)
                     .First();
 
                 return references.ProcessGuid;
-            }
+            
         }
         public TrackingData GetLastByEquipment(Equipment equipment)
         {
@@ -134,31 +132,29 @@ namespace XS156WebApi.Models
         public IEnumerable<TrackingData> GetByLineGroup(EquipmentLineGroup equipmentLineGroup)
         {
             var data = new List<TrackingData>( );
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var references = session.Query<ReferenceProcess>()
+           IReferenceProcessRepository session = new ReferenceProcessRepository();
+                var references = session.GetAll()
                     .Where(x => x.LineGroup == equipmentLineGroup.Id)
                     .OrderByDescending(x => x.StartDateTime);
 
                 data.AddRange(references.Select(referenceProcess => GetByGuid(referenceProcess.ProcessGuid)));
 
                 return data;
-            }
+            
         }
 
         public IEnumerable<TrackingData> GetByLineGroup(Guid equipmentLineGroup)
         {
             var data = new List<TrackingData>();
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var references = session.Query<ReferenceProcess>()
+            IReferenceProcessRepository session = new ReferenceProcessRepository();
+                var references = session.GetAll()
                     .Where(x => x.LineGroup == equipmentLineGroup)
                     .OrderByDescending(x => x.StartDateTime);
 
                 data.AddRange(references.Select(referenceProcess => GetByGuid(referenceProcess.ProcessGuid)));
 
                 return data;
-            }
+            
         }
 
         public IEnumerable<TrackingData> GetByEquipment(Equipment equipment)

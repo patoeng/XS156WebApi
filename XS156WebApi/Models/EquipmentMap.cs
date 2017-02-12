@@ -1,21 +1,24 @@
-﻿using FluentNHibernate.Mapping;
+﻿
+
+using System.Data.Entity.ModelConfiguration;
+
 
 namespace XS156WebApi.Models
 {
-    public class EquipmentMap:ClassMap<Equipment>
+    public class EquipmentMap : EntityTypeConfiguration<Equipment>
     {
         public EquipmentMap ()
         {
-          
-            Id(x => x.Id).GeneratedBy.GuidComb();
-            Map(x => x.EquipmentName);
-            Map(x => x.Role);
-            Map(x => x.Description);
-            Map(x => x.PreviousEquipment);
-            Map(x => x.EquipmentLineGroup);
-            Map(x => x.Status).Generated.Insert().Default("0");
 
-            Table("Equipment");
+            HasKey(x => x.Id);
+            Property(x => x.EquipmentName);
+            Property(x => x.Role);
+            Property(x => x.Description);
+            Property(x => x.PreviousEquipment);
+            Property(x => x.EquipmentLineGroup);
+            Property(x => x.Status);
+
+            ToTable("Equipment");
         }
     }
 }

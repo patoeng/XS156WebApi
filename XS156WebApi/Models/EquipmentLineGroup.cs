@@ -4,7 +4,7 @@ namespace XS156WebApi.Models
 {   
     public class EquipmentLineGroup
     {
-        public virtual Guid Id { get; set; }
-        public virtual string LineGroup { get; set; }
+        public  Guid Id { get; set; }
+        public  string LineGroup { get; set; }
     }
 }

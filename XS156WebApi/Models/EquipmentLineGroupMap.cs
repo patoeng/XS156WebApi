@@ -1,16 +1,14 @@
-﻿using FluentNHibernate.Mapping;
-using NHibernate.Dialect;
-using NHibernate.Mapping;
+﻿using System.Data.Entity.ModelConfiguration;
 
 namespace XS156WebApi.Models
 {
-    public class EquipmentLineGroupMap : ClassMap<EquipmentLineGroup>
+    public class EquipmentLineGroupMap : EntityTypeConfiguration<EquipmentLineGroup>
     {
         public EquipmentLineGroupMap()
         {
-            Id(x => x.Id).GeneratedBy.GuidComb();
-            Map(x => x.LineGroup);
-            Table("EquipmentLineGroup");
+            HasKey(x => x.Id);
+            Property(x => x.LineGroup);
+            ToTable("EquipmentLineGroup");
             
         }
     }

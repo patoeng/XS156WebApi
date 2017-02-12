@@ -1,21 +1,22 @@
-﻿using FluentNHibernate.Mapping;
+﻿using System.Data.Entity.ModelConfiguration;
+
 
 namespace XS156WebApi.Models
 {
-    public class ReferenceProcessMap : ClassMap<ReferenceProcess>
+    public class ReferenceProcessMap : EntityTypeConfiguration<ReferenceProcess>
     {
         public ReferenceProcessMap()
         {
-            Id(x => x.Id).GeneratedBy.Identity();
-            Map(x => x.IsClosed);
-            Map(x => x.ProcessGuid);
-            Map(x => x.LineGroup);
-            Map(x => x.StartDateTime);
-            Map(x => x.TargetQuantity);
-            Map(x => x.EndDateTime).Nullable().Generated.Insert();;
-            Map(x => x.ProductReference);
-            Map(x => x.OrderNumber);
-            Table("ReferenceProcess");
+            HasKey(x => x.Id);
+            Property(x => x.IsClosed);
+            Property(x => x.ProcessGuid);
+            Property(x => x.LineGroup);
+            Property(x => x.StartDateTime);
+            Property(x => x.TargetQuantity);
+            Property(x => x.EndDateTime);
+            Property(x => x.ProductReference);
+            Property(x => x.OrderNumber);
+            ToTable("ReferenceProcess");
         }
     }
 }

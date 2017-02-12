@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using XS156WebApi.Helper;
 
 namespace XS156WebApi.Models.Persistence
 {
-    public class ProductReferenceRepository : Repository<ProductReference>,IProductReferenceRepository
+    public class ProductReferenceRepository : Repository<Xs156DbContext, ProductReference>, IProductReferenceRepository
     {
        
         public ProductReference GetByName(string name)

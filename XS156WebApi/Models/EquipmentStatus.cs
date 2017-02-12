@@ -7,11 +7,11 @@ namespace XS156WebApi.Models
 {
     public enum EquipmentStatus
     {
-        Active,
-        Loan,
-        Repaired,
-        Maintenance,
-        Inactive,
-        Disposed
+        Active=0,
+        Loan=1,
+        Repaired=2,
+        Maintenance=3,
+        Inactive=4,
+        Disposed=5
     }
 }

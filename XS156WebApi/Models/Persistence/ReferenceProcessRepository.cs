@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using FluentNHibernate.Conventions;
-using NHibernate.Linq;
-using NHibernate.Util;
+
 using XS156WebApi.Helper;
 
 namespace XS156WebApi.Models.Persistence
 {
-    public class ReferenceProcessRepository : Repository<ReferenceProcess>, IReferenceProcessRepository
+    public class ReferenceProcessRepository : Repository<Xs156DbContext,ReferenceProcess>, IReferenceProcessRepository
     {
         private static readonly IEquipmentReferenceProcessRepository EquipmentReferenceProcessRepository = new EquipmentReferenceProcessRepository();
         public ReferenceProcess GetByGuid(Guid guid)

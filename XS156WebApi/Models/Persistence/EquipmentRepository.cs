@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using NHibernate.Linq;
+
 using XS156WebApi.Helper;
 
 namespace XS156WebApi.Models.Persistence
 {
-        public class EquipmentRepository : Repository<Equipment> ,IEquipmentRepository
+    public class EquipmentRepository : Repository<Xs156DbContext,Equipment>, IEquipmentRepository
         {
             public Equipment GetPreviousEquipment(Equipment equipment)
             {
@@ -21,8 +21,9 @@ namespace XS156WebApi.Models.Persistence
 
             public Equipment GetNextEquipment(Equipment equipment)
             {
-                using (var session = NHibernateHelper.OpenSession())
-                    return session.Query<Equipment>().ToList().Where(x => x.PreviousEquipment == equipment.Id && x.Status==EquipmentStatus.Active).Take(1)
+                IEquipmentRepository session = new EquipmentRepository();
+               
+                    return session.GetAll().ToList().Where(x => x.PreviousEquipment == equipment.Id && x.Status==EquipmentStatus.Active).Take(1)
                         .First();
             }
         }

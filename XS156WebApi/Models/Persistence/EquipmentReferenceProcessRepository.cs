@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using FluentNHibernate.Conventions;
-using NHibernate.Linq;
+
 using XS156WebApi.Helper;
 
 namespace XS156WebApi.Models.Persistence
 {
-    public class EquipmentReferenceProcessRepository : Repository<EquipmentReferenceProcess>, IEquipmentReferenceProcessRepository
+    public class EquipmentReferenceProcessRepository : Repository<Xs156DbContext,EquipmentReferenceProcess>, IEquipmentReferenceProcessRepository
     {
         public  EquipmentReferenceProcess Get(Equipment equipment, ReferenceProcess referenceProcess)
         {
@@ -52,13 +51,14 @@ namespace XS156WebApi.Models.Persistence
         public  EquipmentReferenceProcess  GetByProccessReference(ReferenceProcess referenceProcess, Equipment equipment)
         {
             IEnumerable<EquipmentReferenceProcess> result;
-            using (var session = NHibernateHelper.OpenSession())
+            IEquipmentReferenceProcessRepository session = new EquipmentReferenceProcessRepository();
+           
 
-             result = session.Query<EquipmentReferenceProcess>().ToList()
+             result = session.GetAll().ToList()
                         .Where(x => (x.Equipment == equipment.Id) && (x.ReferenceProcess == referenceProcess.ProcessGuid)).OrderBy(x => x.LastUpdated).Take(1);
 
               var equipmentReferenceProcesses = result as EquipmentReferenceProcess[] ?? result.ToArray();
-            if (!equipmentReferenceProcesses.IsEmpty())
+            if (equipmentReferenceProcesses.Length<=0)
             return equipmentReferenceProcesses.First();
             else
             {

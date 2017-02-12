@@ -1,14 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
-using NHibernate.Linq;
 using XS156WebApi.Helper;
 
 namespace XS156WebApi.Models.Persistence
 {
-    public abstract class Repository <T> : IRepository<T>
-    {
+    public abstract class Repository <C, T> : 
+    IRepository<T> where T : class where C : DbContext, new() {
+
+    private C _entities = new C();
+    public C Context {
+
+        get { return _entities; }
+        set { _entities = value; }
+    }
+    
             protected Repository()
             {
 
@@ -16,62 +24,49 @@ namespace XS156WebApi.Models.Persistence
 
             public T Get(string id)
             {
-                
-                using (var session = NHibernateHelper.OpenSession())
-                    return session.Get<T>(new Guid(id));
+
+                using (var dbcontect = new Xs156DbContext())
+                    return dbcontect.Set<T>().Find(new Guid(id));
             }
 
-            public IEnumerable<T> GetAll()
+            public virtual IEnumerable<T> GetAll()
             {
-                using (var session = NHibernateHelper.OpenSession())
-                    return session.Query<T>().ToList();
+
+                IEnumerable<T> query = _entities.Set<T>();
+                return query;
             }
 
-            public T Add(T obj)
+            public IEnumerable<T> FindBy(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
             {
-                using (var session = NHibernateHelper.OpenSession())
-                {
-                    using (var transaction = session.BeginTransaction())
-                    {
-                        session.Save(obj);
-                        transaction.Commit();
-                    }
-                    return obj;
-                }
+
+                IEnumerable<T> query = _entities.Set<T>().Where(predicate);
+                return query;
             }
 
-            public void Delete(string id)
+            public virtual T Add(T entity)
             {
-                var obj = Get(id);
-
-                using (var session = NHibernateHelper.OpenSession())
-                {
-                    using (var transaction = session.BeginTransaction())
-                    {
-                        session.Delete(obj);
-                        transaction.Commit();
-                    }
-                }
+                _entities.Set<T>().Add(entity);
+                Save();
+                return entity;
             }
 
-            public bool Update(T obj)
+            
+            public virtual void Delete(T entity)
             {
-                using (var session = NHibernateHelper.OpenSession())
-                {
-                    using (var transaction = session.BeginTransaction())
-                    {
-                        session.SaveOrUpdate(obj);
-                        try
-                        {
-                            transaction.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            throw;
-                        }
-                    }
-                    return true;
-                }
+                _entities.Set<T>().Remove(entity);
+                Save();
+            }
+
+            public virtual bool Update(T entity)
+            {
+                _entities.Entry(entity).State = System.Data.Entity.EntityState.Modified;
+                Save();
+                return true;
+            }
+
+            public virtual void Save()
+            {
+                _entities.SaveChanges();
             }
         }
 }
