@@ -20,13 +20,17 @@ namespace XS156WebApi.Helper
         }
 
         private static ISessionFactory _sessionFactory;
-        const string ConnectionString = @"Data Source=127.0.0.1;Initial Catalog=XS156TRAC;Persist Security Info=True;User ID=sa;Password=passwordsa;MultipleActiveResultSets=True;Max Pool Size=500";
+        const string ConnectionString = @"Data Source=127.0.0.1;Initial Catalog=XS156TRAC;User ID=sa;Password=passwordsa;";
         private static ISessionFactory SessionFactory
         {
             get
             {
                 if (_sessionFactory == null)
+                {
                     CreateSessionFactory();
+                }
+              
+               
 
                 return _sessionFactory;
             }
@@ -34,8 +38,7 @@ namespace XS156WebApi.Helper
 
         private static void CreateSessionFactory()
         {
-            try
-            {
+           
                 
                 
                 NHibernate.Cfg.Configuration  ff= new Configuration();
@@ -45,12 +48,7 @@ namespace XS156WebApi.Helper
                     .ExposeConfiguration(cfg => ff=cfg);
 
                _sessionFactory= cfgs.BuildSessionFactory();
-              
-            }
-            catch (Exception ex1)
-            {
-                throw ex1;
-            }
+            
         }
     }
 }
