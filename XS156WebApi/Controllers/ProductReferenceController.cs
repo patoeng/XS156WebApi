@@ -13,13 +13,19 @@ namespace XS156WebApi.Controllers
     [RoutePrefix("api/products")]
     public class ProductReferenceController : ApiController
     {
-        private static readonly IProductReferenceRepository ProductReferenceDataRepository = new ProductReferenceRepository();
-       
+        private IProductReferenceRepository _productReferenceDataRepository;
+
+        public ProductReferenceController(IProductReferenceRepository productReferenceDataRepository)
+        {
+            _productReferenceDataRepository = productReferenceDataRepository;
+        }
+
+
         [ ActionName("GetAll")]
         [Route("", Name = "GetProductAll")]
         public IHttpActionResult Get()
         {
-            IEnumerable<ProductReference> data = ProductReferenceDataRepository.GetAll();
+            IEnumerable<ProductReference> data = _productReferenceDataRepository.GetAll();
              return Ok(data);
         }
 
@@ -28,7 +34,7 @@ namespace XS156WebApi.Controllers
         [Route("{id}", Name = "GetProductByGuid")]
         public IHttpActionResult Get(string id)
         {
-            var equipment = ProductReferenceDataRepository.Get(id);
+            var equipment = _productReferenceDataRepository.Get(id);
 
             if (equipment == null)
                 return NotFound();
@@ -41,7 +47,7 @@ namespace XS156WebApi.Controllers
         public IHttpActionResult GetProductByName(string reference)
         {
             reference = reference.ToUpper();
-            ProductReference data = ProductReferenceDataRepository.GetByName(reference);
+            ProductReference data = _productReferenceDataRepository.GetByName(reference);
             return Ok(data);
         }
 
@@ -58,7 +64,7 @@ namespace XS156WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            product = ProductReferenceDataRepository.Add(product);
+            product = _productReferenceDataRepository.Add(product);
 
             return CreatedAtRoute("GetProductByGuid", new { id = product.Id }, product);
 
@@ -70,7 +76,7 @@ namespace XS156WebApi.Controllers
         {
             product.Id = new Guid(id);
 
-            if (!ProductReferenceDataRepository.Update(product))
+            if (!_productReferenceDataRepository.Update(product))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             return new StatusCodeResult(HttpStatusCode.NoContent, this);
         }
@@ -79,11 +85,11 @@ namespace XS156WebApi.Controllers
        [Route("{id}")]
         public IHttpActionResult Delete(string id)
         {
-            var serverData = ProductReferenceDataRepository.Get(id);
+            var serverData = _productReferenceDataRepository.Get(id);
 
             if (serverData == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            ProductReferenceDataRepository.Delete(serverData);
+            _productReferenceDataRepository.Delete(serverData);
             return new StatusCodeResult(HttpStatusCode.NoContent, this);
         }
 

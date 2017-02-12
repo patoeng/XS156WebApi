@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using Microsoft.Practices.Unity;
+using XS156WebApi.Helper;
+using XS156WebApi.Models.Persistence;
 
 namespace XS156WebApi
 {
@@ -25,7 +28,15 @@ namespace XS156WebApi
             routeTemplate: "api/{controller}/{action}/{id}",
             defaults: new { id = RouteParameter.Optional }
             );
+
+            var container = new UnityContainer();
+            container.RegisterType<Xs156DbContext>(
+                new InjectionFactory(c => new Xs156DbContext()));
             
+            container.RegisterType<IProductReferenceRepository, ProductReferenceRepository>(new HierarchicalLifetimeManager());
+            container.RegisterType<IEquipmentRepository, EquipmentRepository>(new HierarchicalLifetimeManager());
+            config.DependencyResolver = new UnityResolver(container);
+
             
         }
     }

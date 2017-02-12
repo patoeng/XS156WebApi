@@ -7,8 +7,8 @@ using XS156WebApi.Helper;
 
 namespace XS156WebApi.Models.Persistence
 {
-    public abstract class Repository <C, T> : 
-    IRepository<T> where T : class where C : DbContext, new() {
+    public abstract class Repository <C, T> : IDisposable,
+    IRepository<T> where T : class where C : DbContext , new() {
 
     private C _entities = new C();
     public C Context {
@@ -68,5 +68,23 @@ namespace XS156WebApi.Models.Persistence
             {
                 _entities.SaveChanges();
             }
-        }
+
+            protected void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    if (_entities != null)
+                    {
+                        _entities.Dispose();
+                        _entities = null;
+                    }
+                }
+            }
+
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+    }
 }

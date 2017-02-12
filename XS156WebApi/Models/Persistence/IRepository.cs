@@ -5,7 +5,7 @@ using System.Web;
 
 namespace XS156WebApi.Models.Persistence
 {
-    public interface IRepository<T>
+    public interface IRepository<T> 
     {
         T Get(string id);
         IEnumerable<T> GetAll();

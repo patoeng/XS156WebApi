@@ -16,13 +16,18 @@ namespace XS156WebApi.Controllers
     [RoutePrefix("api/equipment")]
     public class EquipmentController : ApiController
     {
-        static readonly IEquipmentRepository EquipmentDataRepository = new EquipmentRepository();
+        private IEquipmentRepository _equipmentDataRepository;
+
+        public EquipmentController(IEquipmentRepository equipmentDataRepository)
+        {
+            _equipmentDataRepository = equipmentDataRepository;
+        }
 
         [ActionName("GetAll")]
         [Route("", Name = "GetEquipmentAll")]
         public IHttpActionResult GetEquipments()
         {
-             IEnumerable<Equipment> data = EquipmentDataRepository.GetAll();
+             IEnumerable<Equipment> data = _equipmentDataRepository.GetAll();
              return Ok(data);
         }
 
@@ -31,7 +36,7 @@ namespace XS156WebApi.Controllers
         [Route("{id}", Name = "GetEquipmentByGuid")]
         public IHttpActionResult GetEquipmentByGuid(string id)
         {
-            var equipment = EquipmentDataRepository.Get(id);
+            var equipment = _equipmentDataRepository.Get(id);
 
             if (equipment == null)
                 return NotFound();
@@ -43,7 +48,7 @@ namespace XS156WebApi.Controllers
         [Route("getbyrole/{role}", Name = "GetEquipmentByRole")]
         public IHttpActionResult GetEquipmentByRole(EquipmentRole role)
         {
-           IEnumerable<Equipment> data = EquipmentDataRepository.GetAll().Where(d => d.Role == role);
+           IEnumerable<Equipment> data = _equipmentDataRepository.GetAll().Where(d => d.Role == role);
             return Ok(data);
         }
 
@@ -63,7 +68,7 @@ namespace XS156WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            equipment = EquipmentDataRepository.Add(equipment);
+            equipment = _equipmentDataRepository.Add(equipment);
 
             return CreatedAtRoute("GetEquipmentByGuid", new { id = equipment.Id }, equipment);
 
@@ -75,7 +80,7 @@ namespace XS156WebApi.Controllers
         {
             equipment.Id = new Guid(id);
 
-            if (!EquipmentDataRepository.Update(equipment))
+            if (!_equipmentDataRepository.Update(equipment))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             return new StatusCodeResult(HttpStatusCode.NoContent, this);
         }
@@ -84,11 +89,11 @@ namespace XS156WebApi.Controllers
        [Route("{id}")]
         public IHttpActionResult DeleteEquipment(string id)
         {
-            var serverData = EquipmentDataRepository.Get(id);
+            var serverData = _equipmentDataRepository.Get(id);
 
             if (serverData == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            EquipmentDataRepository.Delete(serverData);
+            _equipmentDataRepository.Delete(serverData);
             return new StatusCodeResult(HttpStatusCode.NoContent, this);
         }
     }

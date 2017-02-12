@@ -22,5 +22,6 @@ namespace XS156WebApi.Models.Persistence
                 return new ProductReference();
             }
         }
+        
     }
 }
